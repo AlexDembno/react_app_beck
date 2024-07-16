@@ -4,7 +4,7 @@ const db = require("./../../server");
 
 router.get("/", async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM users");
+    const result = await db.query("SELECT * FROM tasks");
     res.json(result.rows);
   } catch (error) {
     console.error("Error executing query", error.stack);
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db.query(`SELECT * FROM users WHERE id = ${id}`);
+    const result = await db.query(`SELECT * FROM tasks WHERE id = ${id}`);
     res.json(result.rows);
   } catch (error) {
     console.error("Error executing query", error.stack);
@@ -25,14 +25,14 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   console.log(req.body);
-  const { first_name, last_name, email, task_id = "" } = req.body;
+  const { task_name, task_description, priority } = req.body;
   try {
     const query = `
-      INSERT INTO users (first_name, last_name, email, task_id)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO tasks (task_name, task_description, priority)
+      VALUES ($1, $2, $3)
       RETURNING *;
     `;
-    const values = [first_name, last_name, email, task_id];
+    const values = [task_name, task_description, priority];
     const result = await db.query(query, values);
 
     res.json(result.rows[0]);

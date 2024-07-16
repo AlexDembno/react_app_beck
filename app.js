@@ -1,9 +1,14 @@
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
-const db = require("./server");
+app.use(cors());
+app.use(express.json());
+
 const morgan = require("morgan");
 require("dotenv").config();
 const authRouter = require("./routes/api/auth");
+const tasksRouter = require("./routes/api/tasks");
 
 app.all("/anything", (req, res, next) => {
   console.log("Anything method.");
@@ -34,6 +39,8 @@ app.get("/contact/:id", (req, res) => {
 
 app.use("/auth", authRouter);
 
+app.use("/tasks", tasksRouter);
+
 app.use((req, res, next) => {
   console.log("Наше проміжне ПЗ");
   next();
@@ -43,4 +50,3 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(morgan(formatsLogger));
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
