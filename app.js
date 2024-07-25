@@ -9,6 +9,7 @@ const morgan = require("morgan");
 require("dotenv").config();
 const authRouter = require("./routes/api/auth");
 const tasksRouter = require("./routes/api/tasks");
+const tasksListRouter = require("./routes/api/tasksList");
 
 app.all("/anything", (req, res, next) => {
   console.log("Anything method.");
@@ -29,8 +30,8 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Example app listening on port 3000!");
+app.listen(5005, () => {
+  console.log("Example app listening on port 5005!");
 });
 
 app.get("/contact/:id", (req, res) => {
@@ -40,6 +41,8 @@ app.get("/contact/:id", (req, res) => {
 app.use("/auth", authRouter);
 
 app.use("/tasks", tasksRouter);
+
+app.use("/tasksList", tasksListRouter);
 
 app.use((req, res, next) => {
   console.log("Наше проміжне ПЗ");
