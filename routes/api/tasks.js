@@ -51,9 +51,10 @@ router.post("/", async (req, res) => {
       RETURNING *;
     `;
     const values = [task_name, task_description, priority, status];
-    const result = await db.query(query, values);
+    await db.query(query, values);
 
-    res.json(result.rows[0]);
+    const result = await db.query("SELECT * FROM tasks");
+    res.json(result.rows);
   } catch (error) {
     console.error("Error executing query", error.stack);
     res.status(500).json({ error: "Internal Server Error" });

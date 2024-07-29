@@ -34,9 +34,26 @@ router.post("/", async (req, res) => {
       RETURNING *;
     `;
     const values = [task_list_name];
-    const result = await db.query(query, values);
+    await db.query(query, values);
+    const result = await db.query("SELECT * FROM tasks_list");
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error executing query", error.stack);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
-    res.json(result.rows[0]);
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(`DELETE FROM tasks_list WHERE id = ${id}`);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json({
+      message: "Task list deleted successfully",
+    });
   } catch (error) {
     console.error("Error executing query", error.stack);
     res.status(500).json({ error: "Internal Server Error" });
