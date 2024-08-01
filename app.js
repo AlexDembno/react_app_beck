@@ -11,14 +11,10 @@ const authRouter = require("./routes/api/auth");
 const tasksRouter = require("./routes/api/tasks");
 const tasksListRouter = require("./routes/api/tasksList");
 
-app.all("/anything", (req, res, next) => {
-  console.log("Anything method.");
-  next(); // передаємо управління далі
-});
+const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use(morgan(formatsLogger));
+app.use(express.urlencoded({ extended: false }));
 
 app.get("/users", async (req, res) => {
   try {
@@ -28,10 +24,6 @@ app.get("/users", async (req, res) => {
     console.error("Error executing query", error.stack);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
-app.listen(5005, () => {
-  console.log("Example app listening on port 5005!");
 });
 
 app.get("/contact/:id", (req, res) => {
@@ -49,7 +41,6 @@ app.use((req, res, next) => {
   next();
 });
 
-const formatsLogger = app.get("env") === "development" ? "dev" : "short";
-
-app.use(morgan(formatsLogger));
-app.use(express.urlencoded({ extended: false }));
+app.listen(5005, () => {
+  console.log("Example app listening on port 5005!");
+});
