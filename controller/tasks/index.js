@@ -4,6 +4,7 @@ const {
   addTask,
   deleteTask,
   changeStatus,
+  editTask,
 } = require("./getTasks");
 
 module.exports = {
@@ -12,4 +13,5 @@ module.exports = {
   addTask,
   deleteTask,
   changeStatus,
+  editTask,
 };

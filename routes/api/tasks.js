@@ -7,6 +7,7 @@ const {
   addTask,
   deleteTask,
   changeStatus,
+  editTask,
 } = require("../../controller/tasks");
 
 router.get("/", getTasks);
@@ -18,5 +19,7 @@ router.post("/", addTask);
 router.delete("/:id", deleteTask);
 
 router.patch("/", changeStatus);
+
+router.patch("/edit/", editTask);
 
 module.exports = router;
