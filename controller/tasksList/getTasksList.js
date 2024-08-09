@@ -1,13 +1,7 @@
 const db = require("../../server");
 
 const getTasksList = async (req, res) => {
-  try {
-    const result = await db.query("SELECT * FROM tasks_list");
-    res.json(result.rows);
-  } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+
 };
 
 const getTasksListById = async (req, res) => {
