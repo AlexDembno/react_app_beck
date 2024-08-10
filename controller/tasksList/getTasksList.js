@@ -1,7 +1,13 @@
-const db = require("../../server");
+const db = require('../../server');
 
 const getTasksList = async (req, res) => {
-
+  try {
+    const result = await db.query('SELECT * FROM tasks_list');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 const getTasksListById = async (req, res) => {
@@ -10,8 +16,8 @@ const getTasksListById = async (req, res) => {
     const result = await db.query(`SELECT * FROM tasks_list WHERE id = ${id}`);
     res.json(result.rows);
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -27,8 +33,8 @@ const addTasksList = async (req, res) => {
     const { rows } = await db.query(query, values);
     res.status(201).json(rows[0]);
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -37,15 +43,15 @@ const daleteTasksList = async (req, res) => {
   try {
     const result = await db.query(`DELETE FROM tasks_list WHERE id = ${id}`);
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Task not found" });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     res.json({
-      message: "Task list deleted successfully",
+      message: 'Task list deleted successfully',
     });
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
