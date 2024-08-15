@@ -29,7 +29,7 @@ const login = async (req, res) => {
       id: result.rows[0].id,
     };
 
-    const accesstoken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
       expiresIn: '10d',
     });
 
@@ -40,10 +40,10 @@ const login = async (req, res) => {
     RETURNING *;
     `;
 
-    const newValues = [accesstoken, result.rows[0].id];
+    const newValues = [accessToken, result.rows[0].id];
     await db.query(querys, newValues);
 
-    res.status(201).json({ accesstoken });
+    res.status(201).json({ accessToken });
   } catch (error) {
     console.error('Error executing query', error.stack);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -5,16 +5,9 @@ const jwt = require('jsonwebtoken');
 const { ACCESS_SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-  const {
-    first_name,
-    last_name,
-    email,
-    task_id = '',
-    password,
-    token,
-    avatar,
-    children,
-  } = req.body;
+  console.log(req.body);
+
+  const { first_name, last_name, email, password } = req.body;
 
   try {
     const emailCheckQuery = 'SELECT * FROM users WHERE email = $1';
@@ -29,32 +22,20 @@ const register = async (req, res) => {
     const query = `
       INSERT INTO users (
       first_name,
-      last_name, email,
-      task_id,
-      password,
-      token,
-      avatar,
-      children)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING *;
-    `;
-    const values = [
-      first_name,
       last_name,
       email,
-      task_id,
-      hashPassword,
-      token,
-      avatar,
-      children,
-    ];
+      password)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const values = [first_name, last_name, email, hashPassword];
     const result = await db.query(query, values);
 
     const payload = {
       id: result.rows[0].id,
     };
 
-    const accesstoken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
       expiresIn: '10d',
     });
 
@@ -65,10 +46,10 @@ const register = async (req, res) => {
     RETURNING *;
     `;
 
-    const newValues = [accesstoken, result.rows[0].id];
+    const newValues = [accessToken, result.rows[0].id];
     await db.query(querys, newValues);
 
-    res.status(201).json({ accesstoken });
+    res.status(201).json({ accessToken });
   } catch (error) {
     console.error('Error executing query', error.stack);
     res.status(500).json({ error: 'Internal Server Error' });
