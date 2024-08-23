@@ -10,6 +10,7 @@ require('dotenv').config();
 const authRouter = require('./routes/api/auth');
 const tasksRouter = require('./routes/api/tasks');
 const tasksListRouter = require('./routes/api/tasksList');
+const kidsRouter = require('./routes/api/kids');
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
@@ -31,6 +32,8 @@ app.get('/contact/:id', (req, res) => {
 });
 
 app.use('/auth', authRouter);
+
+app.use('/kids', kidsRouter);
 
 app.use('/tasks', tasksRouter);
 

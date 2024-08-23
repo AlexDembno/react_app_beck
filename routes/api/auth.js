@@ -3,7 +3,13 @@ const router = express.Router();
 const db = require('./../../server');
 
 const { authenticate } = require('../../middlewares');
-const { register, login, current, logout } = require('../../controller/auth');
+const {
+  register,
+  login,
+  current,
+  logout,
+  addKids,
+} = require('../../controller/auth');
 
 router.get('/', async (req, res) => {
   try {
@@ -33,5 +39,7 @@ router.post('/login', login);
 router.get('/current', authenticate, current);
 
 router.post('/logout', authenticate, logout);
+
+router.post('/addkids', authenticate, addKids);
 
 module.exports = router;

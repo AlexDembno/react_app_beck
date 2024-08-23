@@ -7,7 +7,7 @@ const { ACCESS_SECRET_KEY } = process.env;
 const register = async (req, res) => {
   console.log(req.body);
 
-  const { first_name, last_name, email, password } = req.body;
+  const { first_name, last_name, status, email, password } = req.body;
 
   try {
     const emailCheckQuery = 'SELECT * FROM users WHERE email = $1';
@@ -23,12 +23,13 @@ const register = async (req, res) => {
       INSERT INTO users (
       first_name,
       last_name,
+      status,
       email,
       password)
-      VALUES ($1, $2, $3, $4)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-    const values = [first_name, last_name, email, hashPassword];
+    const values = [first_name, last_name, status, email, hashPassword];
     const result = await db.query(query, values);
 
     const payload = {
