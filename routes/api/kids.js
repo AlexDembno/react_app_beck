@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./../../server');
-const { authenticate } = require('../../middlewares');
+const { kidsAuthenticate } = require('../../middlewares');
 
-const { addKids, kidsLogin } = require('../../controller/kids');
-
-// router.post('/addkids', authenticate, addKids);
+const { kidsLogin, kidsLogout, kidsCurrent } = require('../../controller/kids');
 
 router.post('/login', kidsLogin);
+
+router.get('/current', kidsAuthenticate, kidsCurrent);
+
+router.post('/logout', kidsAuthenticate, kidsLogout);
 
 module.exports = router;

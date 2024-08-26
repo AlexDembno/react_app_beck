@@ -22,7 +22,7 @@ const kidsLogin = async (req, res) => {
 
     if (!passwordCompare) {
       console.log('error2');
-      return res.status(401).json({ error: 'Email or password is wrong' });
+      return res.status(401).json({ error: 'First_name or password is wrong' });
     }
 
     const payload = {
@@ -34,7 +34,7 @@ const kidsLogin = async (req, res) => {
     });
 
     const querys = `
-    UPDATE public.users
+    UPDATE public.children
     SET token = $1
     WHERE id = $2
     RETURNING *;

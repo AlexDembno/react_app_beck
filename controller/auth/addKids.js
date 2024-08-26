@@ -38,7 +38,7 @@ const addKids = async (req, res) => {
       id: result.rows[0].id,
     };
 
-    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+    const kidsAccessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
       expiresIn: '10d',
     });
 
@@ -49,10 +49,10 @@ const addKids = async (req, res) => {
       RETURNING *;
       `;
 
-    const newValues = [accessToken, result.rows[0].id];
+    const newValues = [kidsAccessToken, result.rows[0].id];
     await db.query(querys, newValues);
 
-    res.status(201).json({ accessToken });
+    res.status(201).json({ kidsAccessToken });
   } catch (error) {
     console.error('Error executing query', error.stack);
     res.status(500).json({ error: 'Internal Server Error' });

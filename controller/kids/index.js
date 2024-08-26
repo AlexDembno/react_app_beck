@@ -1,7 +1,9 @@
-const { addKids } = require('../auth/addKids');
-const { kidsLogin } = require('../kids/kidsLogin');
+const { kidsLogin } = require('./kidsLogin');
+const { kidsLogout } = require('./logout');
+const { kidsCurrent } = require('./current');
 
 module.exports = {
-  addKids,
   kidsLogin,
+  kidsLogout,
+  kidsCurrent,
 };
