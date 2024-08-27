@@ -50,7 +50,9 @@ const register = async (req, res) => {
     const newValues = [accessToken, result.rows[0].id];
     await db.query(querys, newValues);
 
-    res.status(201).json({ accessToken });
+    const userId = result.rows[0].id;
+
+    res.status(201).json({ accessToken, userId });
   } catch (error) {
     console.error('Error executing query', error.stack);
     res.status(500).json({ error: 'Internal Server Error' });

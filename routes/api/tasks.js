@@ -1,5 +1,7 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+
+const { authenticate } = require('../../middlewares');
 
 const {
   getTasks,
@@ -8,18 +10,18 @@ const {
   deleteTask,
   changeStatus,
   editTask,
-} = require("../../controller/tasks");
+} = require('../../controller/tasks');
 
-router.get("/", getTasks);
+router.get('/:id', getTasks);
 
-router.get("/:id", getTaskById);
+router.get('/:id', getTaskById);
 
-router.post("/", addTask);
+router.post('/', authenticate, addTask);
 
-router.delete("/:id", deleteTask);
+router.delete('/:id', deleteTask);
 
-router.patch("/", changeStatus);
+router.patch('/', changeStatus);
 
-router.patch("/edit/", editTask);
+router.patch('/edit/', editTask);
 
 module.exports = router;

@@ -1,12 +1,17 @@
-const db = require("../../server");
+const db = require('../../server');
 
 const getTasks = async (req, res) => {
+  const { id } = req.params;
+  console.log('id', id);
+
   try {
-    const result = await db.query("SELECT * FROM tasks");
+    const result = await db.query(`SELECT * FROM tasks WHERE user_id = ${id}`);
+    console.log('result', result);
+
     res.json(result.rows);
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -16,27 +21,30 @@ const getTaskById = async (req, res) => {
     const result = await db.query(`SELECT * FROM tasks WHERE id = ${id}`);
     res.json(result.rows);
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
 const addTask = async (req, res) => {
+  console.log('req.user', req.user.id);
+  const userId = req.user.id;
+
   const { task_name, task_description, priority, status } = req.body;
   try {
     const query = `
-      INSERT INTO tasks (task_name, task_description, priority, status)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO tasks (task_name, task_description, priority, status, user_id)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-    const values = [task_name, task_description, priority, status];
+    const values = [task_name, task_description, priority, status, userId];
     const { rows } = await db.query(query, values);
-    console.log("rows", rows);
+    console.log('rows', rows);
 
     res.status(201).json(rows[0]);
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -45,15 +53,15 @@ const deleteTask = async (req, res) => {
   try {
     const result = await db.query(`DELETE FROM tasks WHERE id = ${id}`);
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Task not found" });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     res.json({
-      message: "Task deleted successfully",
+      message: 'Task deleted successfully',
     });
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -69,19 +77,19 @@ const changeStatus = async (req, res) => {
     const values = [status, id];
     const { rows } = await db.query(query, values);
     if (rows.length === 0) {
-      return res.status(404).json({ error: "Task not found" });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     res.json(rows[0]);
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-
 const editTask = async (req, res) => {
-  const { taskId, task_name, task_description, priority, status, startDate } = req.body;
+  const { taskId, task_name, task_description, priority, status, startDate } =
+    req.body;
   console.log('req.body', req.body);
 
   let values = [taskId];
@@ -113,7 +121,7 @@ const editTask = async (req, res) => {
   }
 
   if (updates.length === 0) {
-    return res.status(400).json({ error: "No valid fields to update" });
+    return res.status(400).json({ error: 'No valid fields to update' });
   }
 
   try {
@@ -123,20 +131,19 @@ const editTask = async (req, res) => {
       WHERE id = $1
       RETURNING *;
     `;
-    console.log("query", query);
-    
+    console.log('query', query);
+
     const { rows } = await db.query(query, values);
     if (rows.length === 0) {
-      return res.status(404).json({ error: "Task not found" });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     res.json(rows[0]);
   } catch (error) {
-    console.error("Error executing query", error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing query', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 
 module.exports = {
   getTasks,
@@ -144,5 +151,5 @@ module.exports = {
   addTask,
   deleteTask,
   changeStatus,
-  editTask
+  editTask,
 };

@@ -23,6 +23,7 @@ const authenticate = async (req, res, next) => {
     if (!result.rows.length > 0 || !result.rows[0].token) {
       next(HttpError(401));
     }
+
     req.user = result.rows[0];
 
     req.accesstoken = result.rows[0].token;

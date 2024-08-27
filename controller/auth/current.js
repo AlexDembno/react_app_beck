@@ -1,9 +1,10 @@
 const current = async (req, res) => {
-  //   const user = req.user;
+  const userId = req.user.id;
   const accessToken = req.accesstoken;
 
   res.status(200).json({
     accessToken,
+    userId,
   });
 };
 

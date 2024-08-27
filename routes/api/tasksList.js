@@ -1,20 +1,22 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const db = require("./../../server");
+const db = require('./../../server');
+
+const { authenticate } = require('../../middlewares');
 
 const {
   getTasksList,
   getTasksListById,
   addTasksList,
   daleteTasksList,
-} = require("../../controller/tasksList");
+} = require('../../controller/tasksList');
 
-router.get("/", getTasksList);
+router.get('/:id', getTasksList);
 
-router.get("/:id", getTasksListById);
+router.get('/:id', getTasksListById);
 
-router.post("/", addTasksList);
+router.post('/', authenticate, addTasksList);
 
-router.delete("/:id", daleteTasksList);
+router.delete('/:id', daleteTasksList);
 
 module.exports = router;

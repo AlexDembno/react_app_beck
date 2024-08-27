@@ -1,8 +1,11 @@
 const db = require('../../server');
 
 const getTasksList = async (req, res) => {
+  const { id } = req.params;
   try {
-    const result = await db.query('SELECT * FROM tasks_list');
+    const result = await db.query(
+      `SELECT * FROM tasks_list WHERE user_id = ${id}`
+    );
     res.json(result.rows);
   } catch (error) {
     console.error('Error executing query', error.stack);
@@ -22,14 +25,16 @@ const getTasksListById = async (req, res) => {
 };
 
 const addTasksList = async (req, res) => {
+  console.log('req.user', req.user.id);
+  const userId = req.user.id;
   const { task_list_name } = req.body;
   try {
     const query = `
-      INSERT INTO tasks_list (task_list_name)
-      VALUES ($1)
+      INSERT INTO tasks_list (task_list_name, user_id)
+      VALUES ($1, $2)
       RETURNING *;
     `;
-    const values = [task_list_name];
+    const values = [task_list_name, userId];
     const { rows } = await db.query(query, values);
     res.status(201).json(rows[0]);
   } catch (error) {
