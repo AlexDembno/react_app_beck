@@ -1,19 +1,20 @@
 const express = require('express');
 const cors = require('cors');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
 const morgan = require('morgan');
 require('dotenv').config();
+
+const db = require('./server'); // ✅ добавлено подключение к базе данных
+
 const authRouter = require('./routes/api/auth');
 const tasksRouter = require('./routes/api/tasks');
 const tasksListRouter = require('./routes/api/tasksList');
 const kidsRouter = require('./routes/api/kids');
 
-const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
+const app = express();
+app.use(cors());
+app.use(express.json());
 
+const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 app.use(morgan(formatsLogger));
 app.use(express.urlencoded({ extended: false }));
 
@@ -32,11 +33,8 @@ app.get('/contact/:id', (req, res) => {
 });
 
 app.use('/auth', authRouter);
-
 app.use('/kids', kidsRouter);
-
 app.use('/tasks', tasksRouter);
-
 app.use('/tasksList', tasksListRouter);
 
 app.use((req, res) => {
@@ -48,6 +46,7 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-app.listen(5005, () => {
-  console.log('Example app listening on port 5005!');
+const PORT = process.env.PORT || 5005; // ✅ добавлено для Render
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
 });
