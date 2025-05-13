@@ -1,12 +1,15 @@
 const db = require('../../server');
 
+// Получить все задачи по child_id (а не user_id!)
 const getTasks = async (req, res) => {
   const { id } = req.params;
-  console.log('id', id);
+  // console.log('child_id (from params):', id);
 
   try {
-    const result = await db.query(`SELECT * FROM tasks WHERE user_id = ${id}`);
-    console.log('result', result);
+    const result = await db.query(`SELECT * FROM tasks WHERE child_id = $1`, [
+      id,
+    ]);
+    // console.log('result', result.rows);
 
     res.json(result.rows);
   } catch (error) {
@@ -27,19 +30,26 @@ const getTaskById = async (req, res) => {
 };
 
 const addTask = async (req, res) => {
-  console.log('req.user', req.user.id);
   const userId = req.user.id;
+  const { task_name, task_description, priority, status, child_id } = req.body;
 
-  const { task_name, task_description, priority, status } = req.body;
   try {
     const query = `
-      INSERT INTO tasks (task_name, task_description, priority, status, user_id)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO tasks (task_name, task_description, priority, status, user_id, child_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-    const values = [task_name, task_description, priority, status, userId];
+    const values = [
+      task_name,
+      task_description,
+      priority,
+      status,
+      userId,
+      child_id,
+    ];
+
     const { rows } = await db.query(query, values);
-    console.log('rows', rows);
+    // console.log('rows', rows);
 
     res.status(201).json(rows[0]);
   } catch (error) {
@@ -90,7 +100,7 @@ const changeStatus = async (req, res) => {
 const editTask = async (req, res) => {
   const { taskId, task_name, task_description, priority, status, startDate } =
     req.body;
-  console.log('req.body', req.body);
+  // console.log('req.body', req.body);
 
   let values = [taskId];
   let updates = [];
@@ -131,7 +141,7 @@ const editTask = async (req, res) => {
       WHERE id = $1
       RETURNING *;
     `;
-    console.log('query', query);
+    // console.log('query', query);
 
     const { rows } = await db.query(query, values);
     if (rows.length === 0) {

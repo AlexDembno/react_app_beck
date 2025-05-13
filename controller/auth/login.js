@@ -18,10 +18,10 @@ const login = async (req, res) => {
       password,
       result.rows[0].password
     );
-    console.log('passwordCompare', passwordCompare);
+    // console.log('passwordCompare', passwordCompare);
 
     if (!passwordCompare) {
-      console.log('error2');
+      // console.log('error2');
       return res.status(401).json({ error: 'Email or password is wrong' });
     }
 

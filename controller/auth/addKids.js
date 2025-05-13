@@ -8,7 +8,7 @@ const addKids = async (req, res) => {
   const user_id = req.user.id;
 
   const { first_name, last_name, password } = req.body;
-  console.log('req.body', req.body);
+  // console.log('req.body', req.body);
 
   try {
     const firstNameCheckQuery = 'SELECT * FROM children WHERE first_name = $1';

@@ -5,7 +5,7 @@ const { HttpError } = require('../helpers');
 const { ACCESS_SECRET_KEY } = process.env;
 
 const authenticate = async (req, res, next) => {
-  console.log('req.headers', req.headers);
+  // console.log('req.headers', req.headers);
 
   const { authorization = '' } = req.headers;
 

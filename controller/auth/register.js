@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { ACCESS_SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   const { first_name, last_name, status, email, password } = req.body;
 

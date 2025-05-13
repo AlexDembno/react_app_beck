@@ -3,6 +3,7 @@ const { login } = require('./login');
 const { current } = require('./current');
 const { logout } = require('./logout');
 const { addKids } = require('./addKids');
+const { getUserKids } = require('./getUserKids');
 
 module.exports = {
   register,
@@ -10,4 +11,5 @@ module.exports = {
   current,
   logout,
   addKids,
+  getUserKids,
 };

@@ -9,6 +9,7 @@ const {
   current,
   logout,
   addKids,
+  getUserKids,
 } = require('../../controller/auth');
 
 router.get('/', async (req, res) => {
@@ -31,6 +32,8 @@ router.get('/', async (req, res) => {
 //     res.status(500).json({ error: 'Internal Server Error' });
 //   }
 // });
+
+router.get('/children', authenticate, getUserKids);
 
 router.post('/register', register);
 

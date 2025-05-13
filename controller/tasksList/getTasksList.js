@@ -1,11 +1,14 @@
 const db = require('../../server');
 
 const getTasksList = async (req, res) => {
-  const { id } = req.params;
+  const { id: child_id } = req.params;
+
   try {
     const result = await db.query(
-      `SELECT * FROM tasks_list WHERE user_id = ${id}`
+      `SELECT * FROM tasks_list WHERE child_id = $1`,
+      [child_id]
     );
+
     res.json(result.rows);
   } catch (error) {
     console.error('Error executing query', error.stack);
@@ -25,17 +28,18 @@ const getTasksListById = async (req, res) => {
 };
 
 const addTasksList = async (req, res) => {
-  console.log('req.user', req.user.id);
   const userId = req.user.id;
-  const { task_list_name } = req.body;
+  const { task_list_name, child_id } = req.body;
+
   try {
     const query = `
-      INSERT INTO tasks_list (task_list_name, user_id)
-      VALUES ($1, $2)
+      INSERT INTO tasks_list (task_list_name, user_id, child_id)
+      VALUES ($1, $2, $3)
       RETURNING *;
     `;
-    const values = [task_list_name, userId];
+    const values = [task_list_name, userId, child_id];
     const { rows } = await db.query(query, values);
+
     res.status(201).json(rows[0]);
   } catch (error) {
     console.error('Error executing query', error.stack);

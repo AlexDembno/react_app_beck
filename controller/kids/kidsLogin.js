@@ -18,10 +18,10 @@ const kidsLogin = async (req, res) => {
       password,
       result.rows[0].password
     );
-    console.log('passwordCompare', passwordCompare);
+    // console.log('passwordCompare', passwordCompare);
 
     if (!passwordCompare) {
-      console.log('error2');
+      // console.log('error2');
       return res.status(401).json({ error: 'First_name or password is wrong' });
     }
 
@@ -43,7 +43,8 @@ const kidsLogin = async (req, res) => {
     const newValues = [accessToken, result.rows[0].id];
     await db.query(querys, newValues);
 
-    const userId = result.rows[0].user_id;
+    const userId = result.rows[0].id;
+    console.log('userId', userId);
 
     res.status(201).json({ accessToken, userId });
   } catch (error) {
